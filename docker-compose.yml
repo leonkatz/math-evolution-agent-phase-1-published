@@ -1,0 +1,69 @@
+# Math Evolution Agent — local reproducibility stack
+# Usage: docker compose up
+# See .env.example → copy to .env and set POSTGRES_PASSWORD before running.
+
+services:
+
+  # ── PostgreSQL — experiment and training log storage ────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: math-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       math_agent
+      POSTGRES_USER:     math_agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U math_agent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Trainer — runs train.py with your chosen config ─────────────────────────
+  trainer:
+    build: .
+    container_name: math-trainer
+    command: >
+      python train.py
+        --seed    ${SEED:-42}
+        --steps   ${STEPS:-15000000}
+        --n_envs  ${N_ENVS:-1}
+    restart: "no"
+    environment:
+      - DATABASE_URL=postgresql://math_agent:${POSTGRES_PASSWORD}@postgres:5432/math_agent
+      - MATH_AGENT_MACHINE_NAME=local
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./checkpoints:/app/checkpoints
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Dashboard — live training monitor at http://localhost:8081 ──────────────
+  dashboard:
+    build: .
+    container_name: math-dashboard
+    command: python dashboard.py
+    restart: unless-stopped
+    ports:
+      - "${DASHBOARD_PORT:-8081}:${DASHBOARD_PORT:-8081}"
+    environment:
+      - DATABASE_URL=postgresql://math_agent:${POSTGRES_PASSWORD}@postgres:5432/math_agent
+      - MATH_AGENT_MACHINE_NAME=local
+      - DATA_PATH=/app/data
+      - DASHBOARD_PORT=${DASHBOARD_PORT:-8081}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data
+      - ./paper:/app/paper:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${DASHBOARD_PORT:-8081}/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

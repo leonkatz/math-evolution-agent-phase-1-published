@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Local env (never commit real passwords)
+.env
+.env.local
+
+# Data — too large for git, mounted as Docker volumes
+data/postgres/
+checkpoints/*.pt
+
+# Keep empty mount-point placeholders
+!checkpoints/.gitkeep
+!data/.gitkeep
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
