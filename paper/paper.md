@@ -3,7 +3,7 @@
 **Leon Katz**
 *Independent Researcher*
 
-**Draft — April 2026**
+**May 2026**
 
 ---
 
@@ -679,4 +679,4 @@ The published dataset will include both a PostgreSQL database dump (for exact re
 
 ---
 
-*Draft — Phase 1 results as of April 2026.*
+*Phase 1 results as of May 2026.*
