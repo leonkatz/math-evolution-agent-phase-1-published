@@ -1,6 +1,8 @@
 # Math Evolution Agent — Phase 1
 
-> **Paper:** [Two Failure Modes of Curriculum Reinforcement Learning: Stochastic Evaluation Gates and Reward Scale Mismatch](ARXIV_PLACEHOLDER) — Leon Katz, 2026
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20065425.svg)](https://doi.org/10.5281/zenodo.20065425)
+
+> **Paper:** [Two Failure Modes of Curriculum Reinforcement Learning: Stochastic Evaluation Gates and Reward Scale Mismatch](https://doi.org/10.5281/zenodo.20065425) — Leon Katz, 2026
 
 A PPO agent that teaches itself mathematics from scratch — no human demonstrations, no pre-training. Starting from single-digit addition, it progresses through a 13-level curriculum spanning arithmetic, algebra, and physics, learning entirely from reward signals.
 
@@ -114,12 +116,14 @@ SEED=42 STEPS=30000000 docker compose up
 ## Citation
 
 ```bibtex
-@article{katz2026mathevolution,
+@misc{katz2026mathevolution,
   title   = {Two Failure Modes of Curriculum Reinforcement Learning:
              Stochastic Evaluation Gates and Reward Scale Mismatch},
   author  = {Katz, Leon},
   year    = {2026},
-  note    = {arXiv:ARXIV_PLACEHOLDER}
+  doi     = {10.5281/zenodo.20065425},
+  url     = {https://doi.org/10.5281/zenodo.20065425},
+  publisher = {Zenodo}
 }
 ```
 
